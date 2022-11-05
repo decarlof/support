@@ -4,7 +4,7 @@ shopt -s expand_aliases
 # Command-line arguments
 args=$*
 # Flags set by command-line arguments
-FULL_CLONE=False
+FULL_CLONE=True
 CONFIG_SOURCED=False
 
 # Handle command-line arguments
@@ -31,59 +31,61 @@ if [ ${CONFIG_SOURCED} == "False" ]
 then
 	echo "Using default configuration"
 
-	EPICS_BASE=/APSshare/epics/base-7.0.4.1
+	EPICS_BASE=/home/beams/USER2BMB/epics-test/epics-base
 
 	HAVE_HIDAPI=NO
-	WITH_PVA=YES
+	WITH_PVA=NO
 
 	# The name of the synApps directory can be customized
 	#!SYNAPPS_DIR=synApps_X_X
 
 	SUPPORT=R6-2-1
+	CONFIGURE=master
+	UTILS=R6-1
 
-	ALLENBRADLEY=2.3
-	ALIVE=R1-3-1
+	# ALLENBRADLEY=2.3
+	# ALIVE=R1-3-1
 	AREA_DETECTOR=R3-11
 	ASYN=R4-42
 	AUTOSAVE=R5-10-2
 	BUSY=R1-7-3
 	CALC=R3-7-4
-	CAMAC=R2-7-4
-	CAPUTRECORDER=R1-7-4
-	DAC128V=R2-10-1
-	DELAYGEN=R1-2-3
-	DXP=R6-0
-	DXPSITORO=R1-2
+	# CAMAC=R2-7-4
+	# CAPUTRECORDER=R1-7-4
+	# DAC128V=R2-10-1
+	# DELAYGEN=R1-2-3
+	# DXP=R6-0
+	# DXPSITORO=R1-2
 	DEVIOCSTATS=3.1.16
-	ETHERIP=ether_ip-3-2
-	GALIL=V3-6
-	IP=R2-21-1
-	IPAC=2.16
-	IP330=R2-10
-	IPUNIDIG=R2-12
-	LOVE=R3-2-8
-	LUA=R3-0-2
-	MCA=R7-9
-	MEASCOMP=R2-5-1
-	ULDAQ=1.2.1
-	MODBUS=R3-2
-	MOTOR=R7-2-2
-	OPCUA=v0.9.3
-	#UASDK=/path/to/sdk
-	OPTICS=R2-13-5
-	QUADEM=R9-4
+	# ETHERIP=ether_ip-3-2
+	# GALIL=V3-6
+	# IP=R2-21-1
+	# IPAC=2.16
+	# IP330=R2-10
+	# IPUNIDIG=R2-12
+	# LOVE=R3-2-8
+	# LUA=R3-0-2
+	# MCA=R7-9
+	# MEASCOMP=R2-5-1
+	# ULDAQ=1.2.1
+	# MODBUS=R3-2
+	# MOTOR=R7-2-2
+	# OPCUA=v0.9.3
+	# #UASDK=/path/to/sdk
+	# OPTICS=R2-13-5
+	# QUADEM=R9-4
 	SNCSEQ=2.2.9
-	SOFTGLUE=R2-8-3
-	SOFTGLUEZYNQ=R2-0-4
+	# SOFTGLUE=R2-8-3
+	# SOFTGLUEZYNQ=R2-0-4
 	SSCAN=R2-11-5
-	SCALER=4.0
-	STD=R3-6-3
-	STREAM=2.8.22
-	VAC=R1-9-1
-	VME=R2-9-4
-	YOKOGAWA_DAS=R2-0-1
-	XSPRESS3=2-5
-	XXX=R6-2-1
+	# SCALER=4.0
+	# STD=R3-6-3
+	# STREAM=2.8.22
+	# VAC=R1-9-1
+	# VME=R2-9-4
+	# YOKOGAWA_DAS=R2-0-1
+	# XSPRESS3=2-5
+	# XXX=R6-2-1
 fi
 
 
@@ -170,6 +172,9 @@ cd ${SYNAPPS_DIR}
 
 get_support support $SUPPORT
 cd support
+
+get_support configure      $CONFIGURE
+get_support utils          $UTILS
 
 SUPPORT=$(pwd)
 
@@ -306,24 +311,6 @@ then
 
 	cd ../..
 
-fi
-
-
-if [[ $ASYN ]]
-then
-	cd asyn-$ASYN
-	
-	#RHEL 8 and Centos change library names
-	if [[ -f /etc/redhat-release ]]
-	then
-		if grep -q -i "release 8" /etc/redhat-release
-		then
-			echo "TIRPC = YES" >> ./configure/CONFIG_SITE.Common.linux-x86_64
-			cp ./configure/CONFIG_SITE.Common.linux-x86_64 ./configure/CONFIG_SITE.Common.linux-x86_64-debug
-		fi
-	fi
-	
-	cd ..
 fi
 
 
